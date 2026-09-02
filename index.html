@@ -1,0 +1,1756 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DUE รพ.ธวัชบุรี</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+/* ─── Design Tokens ─── */
+:root {
+  --bg: #E8F2F7;
+  --surface: #FFFFFF;
+  --surface-alt: #F2F8FB;
+  --border: #C4DDE8;
+  --border-focus: #2B93BF;
+  --text: #0A2533;
+  --text-muted: #4E7080;
+  --text-inv: #FFFFFF;
+
+  --primary: #08526F;
+  --primary-h: #0A6D93;
+  --primary-lt: #D6EDF6;
+  --primary-ring: rgba(8,82,111,.2);
+
+  --amber: #A95C00;
+  --amber-lt: #FEF0D9;
+  --green: #0A6843;
+  --green-lt: #D1FAEC;
+  --red: #A61414;
+  --red-lt: #FEEAEA;
+  --blue: #1646A8;
+  --blue-lt: #DDE6FF;
+  --purple: #5B21B6;
+  --purple-lt: #EDE9FE;
+
+  --nav-bg: #07405A;
+  --nav-text: #C8E4EF;
+  --nav-act: #FFFFFF;
+
+  --r: 10px;
+  --r-sm: 6px;
+  --r-lg: 16px;
+  --sh: 0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.05);
+  --sh-md: 0 4px 12px rgba(0,0,0,.09),0 2px 4px rgba(0,0,0,.06);
+
+  --f: 'Sarabun',-apple-system,'Helvetica Neue',sans-serif;
+  --mono: 'IBM Plex Mono','Courier New',monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #07181F;
+    --surface: #0C2330;
+    --surface-alt: #0F2D3C;
+    --border: #1C3E50;
+    --border-focus: #40B0DC;
+    --text: #D6EEF7;
+    --text-muted: #6FA8BF;
+    --text-inv: #07181F;
+    --primary: #2BAEDC;
+    --primary-h: #3ACAF5;
+    --primary-lt: #0A3347;
+    --primary-ring: rgba(43,174,220,.25);
+    --amber: #FBB840;
+    --amber-lt: #3D2600;
+    --green: #31D693;
+    --green-lt: #053420;
+    --red: #F77;
+    --red-lt: #3A0808;
+    --blue: #6AA3FF;
+    --blue-lt: #132050;
+    --purple: #A78BFA;
+    --purple-lt: #2B1C50;
+    --nav-bg: #040F16;
+    --nav-text: #90C8DE;
+    --nav-act: #FFFFFF;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #07181F;
+  --surface: #0C2330;
+  --surface-alt: #0F2D3C;
+  --border: #1C3E50;
+  --border-focus: #40B0DC;
+  --text: #D6EEF7;
+  --text-muted: #6FA8BF;
+  --text-inv: #07181F;
+  --primary: #2BAEDC;
+  --primary-h: #3ACAF5;
+  --primary-lt: #0A3347;
+  --primary-ring: rgba(43,174,220,.25);
+  --amber: #FBB840;
+  --amber-lt: #3D2600;
+  --green: #31D693;
+  --green-lt: #053420;
+  --red: #F77;
+  --red-lt: #3A0808;
+  --blue: #6AA3FF;
+  --blue-lt: #132050;
+  --purple: #A78BFA;
+  --purple-lt: #2B1C50;
+  --nav-bg: #040F16;
+  --nav-text: #90C8DE;
+  --nav-act: #FFFFFF;
+}
+
+*,*::before,*::after { box-sizing:border-box;margin:0;padding:0; }
+html { scroll-behavior:smooth; }
+body { font-family:var(--f);font-size:15px;color:var(--text);background:var(--bg);min-height:100vh;line-height:1.6; }
+h1,h2,h3,h4 { text-wrap:balance;line-height:1.3; }
+button,input,select,textarea { font-family:var(--f);font-size:14px; }
+input:focus,select:focus,textarea:focus { outline:none;border-color:var(--border-focus);box-shadow:0 0 0 3px var(--primary-ring); }
+
+/* ─── Header / Nav ─── */
+header {
+  background:var(--nav-bg);
+  color:var(--nav-text);
+  position:sticky;top:0;z-index:50;
+  box-shadow:0 2px 8px rgba(0,0,0,.3);
+}
+.header-inner {
+  max-width:1100px;margin:0 auto;
+  display:flex;align-items:center;gap:12px;
+  padding:10px 20px;
+}
+.logo-mark {
+  width:38px;height:38px;flex-shrink:0;
+  background:var(--primary);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;font-weight:700;color:#fff;
+  box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.2);
+}
+.site-title { flex:1; }
+.site-title h1 { font-size:15px;font-weight:700;color:var(--nav-act);line-height:1.2; }
+.site-title p { font-size:11px;color:var(--nav-text);opacity:.7;margin-top:1px; }
+.nav-tabs { display:flex;gap:4px; }
+.nav-tab {
+  padding:6px 14px;border-radius:var(--r-sm);
+  border:none;cursor:pointer;font-weight:500;font-size:13px;
+  background:transparent;color:var(--nav-text);
+  transition:background .2s,color .2s;
+}
+.nav-tab.active { background:rgba(255,255,255,.15);color:var(--nav-act); }
+.nav-tab:hover:not(.active) { background:rgba(255,255,255,.08); }
+.header-actions { display:flex;gap:8px;margin-left:4px; }
+.icon-btn {
+  width:34px;height:34px;border-radius:var(--r-sm);
+  border:none;cursor:pointer;
+  background:rgba(255,255,255,.1);color:var(--nav-text);
+  display:flex;align-items:center;justify-content:center;font-size:16px;
+  transition:background .2s;
+}
+.icon-btn:hover { background:rgba(255,255,255,.2); }
+
+/* ─── Main Layout ─── */
+main { max-width:1100px;margin:0 auto;padding:24px 20px 60px; }
+.tab-content { display:none; }
+.tab-content.active { display:block; }
+
+/* ─── Drug Selection ─── */
+.section-label {
+  font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--text-muted);margin-bottom:10px;
+}
+.drug-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-bottom:8px; }
+.drug-card {
+  background:var(--surface);border:2px solid var(--border);border-radius:var(--r-lg);
+  padding:18px 18px 14px;cursor:pointer;
+  transition:border-color .2s,box-shadow .2s,transform .1s;
+  position:relative;
+}
+.drug-card:hover { border-color:var(--primary);box-shadow:var(--sh-md); }
+.drug-card.selected { border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-ring); }
+.drug-card-icon { font-size:28px;margin-bottom:10px; }
+.drug-card h3 { font-size:14px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:4px; }
+.drug-card .drug-class { font-size:11px;font-weight:600;padding:2px 7px;border-radius:20px;display:inline-block;margin-bottom:6px; }
+.drug-card p { font-size:12px;color:var(--text-muted);line-height:1.4; }
+.badge-d { background:var(--red-lt);color:var(--red); }
+.badge-c { background:var(--amber-lt);color:var(--amber); }
+
+/* ─── Form Container ─── */
+#form-container { display:none; }
+.form-drug-header {
+  background:var(--primary);color:#fff;
+  border-radius:var(--r-lg) var(--r-lg) 0 0;
+  padding:14px 20px;display:flex;align-items:center;gap:12px;
+}
+.form-drug-header h2 { font-size:16px;font-weight:700;flex:1; }
+.form-drug-header .sub { font-size:12px;opacity:.8;margin-top:2px; }
+.btn-change {
+  background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);
+  color:#fff;border-radius:var(--r-sm);padding:5px 12px;
+  cursor:pointer;font-size:12px;font-weight:600;
+  transition:background .2s;
+}
+.btn-change:hover { background:rgba(255,255,255,.3); }
+
+/* ─── Form Sections ─── */
+.form-body { background:var(--surface);border-radius:0 0 var(--r-lg) var(--r-lg);box-shadow:var(--sh-md); }
+.form-section {
+  padding:20px;border-bottom:1px solid var(--border);
+}
+.form-section:last-child { border-bottom:none; }
+.section-title {
+  font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;
+}
+.section-title::before {
+  content:'';width:3px;height:16px;background:var(--primary);border-radius:2px;flex-shrink:0;
+}
+.field-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px; }
+.field-grid-3 { grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); }
+.field { display:flex;flex-direction:column;gap:4px; }
+.field label { font-size:12px;font-weight:600;color:var(--text-muted); }
+.field label.req::after { content:' *';color:var(--red); }
+.field input,
+.field select,
+.field textarea {
+  padding:8px 10px;border:1px solid var(--border);border-radius:var(--r-sm);
+  background:var(--surface);color:var(--text);
+  transition:border-color .2s,box-shadow .2s;
+}
+.field textarea { resize:vertical;min-height:60px; }
+.field input[readonly] { background:var(--surface-alt);color:var(--text-muted);cursor:default; }
+
+.crcl-box {
+  background:var(--primary-lt);border:1px solid var(--border);border-radius:var(--r-sm);
+  padding:10px 14px;display:flex;align-items:center;gap:10px;margin-top:4px;
+}
+.crcl-val { font-family:var(--mono);font-size:24px;font-weight:500;color:var(--primary); }
+.crcl-label { font-size:12px;color:var(--text-muted); }
+.crcl-warn { font-size:11px;color:var(--amber);font-weight:600;margin-top:2px; }
+
+/* ─── Checkboxes / Radios ─── */
+.check-group { display:flex;flex-wrap:wrap;gap:8px;margin-top:2px; }
+.check-item {
+  display:flex;align-items:center;gap:6px;
+  background:var(--surface-alt);border:1px solid var(--border);border-radius:var(--r-sm);
+  padding:6px 10px;cursor:pointer;font-size:13px;
+  transition:border-color .2s,background .2s;user-select:none;
+}
+.check-item input { width:14px;height:14px;cursor:pointer;accent-color:var(--primary); }
+.check-item:has(input:checked) { background:var(--primary-lt);border-color:var(--primary); }
+
+.radio-group { display:flex;flex-wrap:wrap;gap:8px;margin-top:2px; }
+.radio-item {
+  display:flex;align-items:center;gap:6px;
+  background:var(--surface-alt);border:1px solid var(--border);border-radius:var(--r-sm);
+  padding:6px 12px;cursor:pointer;font-size:13px;
+  transition:border-color .2s,background .2s;user-select:none;
+}
+.radio-item input { width:14px;height:14px;cursor:pointer;accent-color:var(--primary); }
+.radio-item:has(input:checked) { background:var(--primary-lt);border-color:var(--primary); }
+
+/* ─── Treatment Type Tabs ─── */
+.tx-tabs { display:flex;gap:0;margin-bottom:14px;border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden; }
+.tx-tab {
+  flex:1;padding:9px;text-align:center;cursor:pointer;font-size:13px;font-weight:600;
+  background:var(--surface-alt);color:var(--text-muted);border:none;
+  transition:background .2s,color .2s;
+}
+.tx-tab:first-child { border-right:1px solid var(--border); }
+.tx-tab.active-specific { background:var(--green-lt);color:var(--green); }
+.tx-tab.active-empirical { background:var(--amber-lt);color:var(--amber); }
+
+/* ─── Indication Box ─── */
+.indication-box {
+  border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden;
+}
+.indication-box .ind-header {
+  padding:8px 12px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+}
+.indication-box.specific .ind-header { background:var(--green-lt);color:var(--green); }
+.indication-box.empirical .ind-header { background:var(--amber-lt);color:var(--amber); }
+.indication-list { padding:10px 12px;display:flex;flex-direction:column;gap:6px; }
+.ind-check {
+  display:flex;align-items:flex-start;gap:8px;cursor:pointer;
+  font-size:13px;line-height:1.5;color:var(--text);
+  padding:6px 8px;border-radius:var(--r-sm);border:1px solid transparent;
+  transition:background .15s,border-color .15s;
+}
+.ind-check input { margin-top:3px;width:14px;height:14px;flex-shrink:0;accent-color:var(--primary); }
+.ind-check:has(input:checked) { background:var(--primary-lt);border-color:var(--primary); }
+
+/* ─── Dose Reference ─── */
+.dose-table {
+  border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden;margin-bottom:12px;
+}
+.dose-table table { width:100%;border-collapse:collapse;font-size:13px; }
+.dose-table th { background:var(--surface-alt);padding:8px 12px;text-align:left;font-weight:600;color:var(--text-muted);border-bottom:1px solid var(--border); }
+.dose-table td { padding:8px 12px;border-bottom:1px solid var(--border); }
+.dose-table tr:last-child td { border-bottom:none; }
+.dose-table tr.highlighted td { background:var(--primary-lt);font-weight:600; }
+.dose-table td:first-child { font-family:var(--mono);font-size:12px; }
+
+/* ─── Day Assessment ─── */
+.day-tabs { display:flex;gap:6px;margin-bottom:14px; }
+.day-tab-btn {
+  padding:6px 16px;border-radius:var(--r-sm);
+  border:1px solid var(--border);cursor:pointer;
+  font-size:13px;font-weight:600;background:var(--surface-alt);color:var(--text-muted);
+  transition:all .2s;
+}
+.day-tab-btn.active { background:var(--primary);color:#fff;border-color:var(--primary); }
+.day-panel { display:none; }
+.day-panel.active { display:block; }
+
+.outcome-grid { display:flex;flex-wrap:wrap;gap:8px; }
+.outcome-btn {
+  padding:7px 16px;border:1px solid var(--border);border-radius:20px;
+  cursor:pointer;font-size:13px;font-weight:600;background:var(--surface-alt);color:var(--text-muted);
+  transition:all .2s;
+}
+.outcome-btn:has(input:checked).improve { background:var(--green-lt);border-color:var(--green);color:var(--green); }
+.outcome-btn:has(input:checked).not-improve { background:var(--amber-lt);border-color:var(--amber);color:var(--amber); }
+.outcome-btn:has(input:checked).refer { background:var(--blue-lt);border-color:var(--blue);color:var(--blue); }
+.outcome-btn:has(input:checked).died { background:var(--red-lt);border-color:var(--red);color:var(--red); }
+.outcome-btn input { position:absolute;opacity:0;pointer-events:none; }
+
+/* ─── Appropriateness Badge ─── */
+.approp-badge {
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 12px;border-radius:20px;font-size:13px;font-weight:600;
+  margin-top:8px;
+}
+.approp-badge.ok { background:var(--green-lt);color:var(--green); }
+.approp-badge.warn { background:var(--amber-lt);color:var(--amber); }
+.approp-badge.unknown { background:var(--surface-alt);color:var(--text-muted); }
+
+/* ─── Submit Area ─── */
+.form-footer { padding:20px;display:flex;gap:12px;justify-content:flex-end;align-items:center;background:var(--surface-alt);border-radius:0 0 var(--r-lg) var(--r-lg); }
+.btn-primary {
+  padding:10px 28px;background:var(--primary);color:#fff;
+  border:none;border-radius:var(--r-sm);cursor:pointer;font-size:14px;font-weight:700;
+  transition:background .2s;display:flex;align-items:center;gap:8px;
+}
+.btn-primary:hover { background:var(--primary-h); }
+.btn-primary:disabled { opacity:.5;cursor:not-allowed; }
+.btn-secondary {
+  padding:10px 20px;background:transparent;color:var(--text-muted);
+  border:1px solid var(--border);border-radius:var(--r-sm);cursor:pointer;font-size:14px;font-weight:600;
+  transition:border-color .2s,color .2s;
+}
+.btn-secondary:hover { border-color:var(--primary);color:var(--primary); }
+
+/* ─── Dashboard ─── */
+.dash-header { display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:20px; }
+.dash-header h2 { font-size:20px;font-weight:700;flex:1; }
+.quarter-select-wrap { display:flex;align-items:center;gap:8px; }
+.quarter-select-wrap label { font-size:13px;font-weight:600;color:var(--text-muted); }
+.quarter-select-wrap select { padding:7px 12px;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface);color:var(--text);font-size:13px; }
+
+.stats-row { display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:20px; }
+.stat-tile {
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);
+  padding:18px 20px;box-shadow:var(--sh);
+}
+.stat-tile .stat-label { font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);margin-bottom:6px; }
+.stat-tile .stat-val { font-size:32px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--primary);line-height:1.1; }
+.stat-tile .stat-sub { font-size:12px;color:var(--text-muted);margin-top:4px; }
+
+.charts-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(440px,1fr));gap:16px; }
+.chart-card {
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);
+  padding:20px;box-shadow:var(--sh);
+}
+.chart-card h3 { font-size:14px;font-weight:700;color:var(--text);margin-bottom:14px; }
+.chart-wrap { position:relative;height:240px; }
+
+.data-table-wrap { overflow-x:auto; }
+.data-table { width:100%;border-collapse:collapse;font-size:13px; }
+.data-table th { background:var(--surface-alt);padding:9px 12px;text-align:left;font-weight:600;color:var(--text-muted);border-bottom:2px solid var(--border);white-space:nowrap; }
+.data-table td { padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:middle; }
+.data-table tr:last-child td { border-bottom:none; }
+.data-table tr:hover td { background:var(--surface-alt); }
+.pill {
+  display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700;
+}
+.pill-specific { background:var(--green-lt);color:var(--green); }
+.pill-empirical { background:var(--amber-lt);color:var(--amber); }
+.pill-improve { background:var(--green-lt);color:var(--green); }
+.pill-not { background:var(--amber-lt);color:var(--amber); }
+.pill-died { background:var(--red-lt);color:var(--red); }
+
+.dash-empty {
+  text-align:center;padding:60px 20px;color:var(--text-muted);
+}
+.dash-empty .icon { font-size:48px;margin-bottom:12px; }
+.dash-loading { text-align:center;padding:40px;color:var(--text-muted); }
+
+/* ─── Modal ─── */
+.modal-overlay {
+  position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;
+  display:flex;align-items:center;justify-content:center;padding:20px;
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.modal-overlay.open { opacity:1;pointer-events:all; }
+.modal {
+  background:var(--surface);border-radius:var(--r-lg);padding:28px;
+  width:100%;max-width:480px;box-shadow:0 20px 60px rgba(0,0,0,.3);
+  transform:translateY(20px);transition:transform .2s;
+}
+.modal-overlay.open .modal { transform:translateY(0); }
+.modal h3 { font-size:18px;font-weight:700;margin-bottom:6px; }
+.modal p { font-size:13px;color:var(--text-muted);margin-bottom:18px;line-height:1.5; }
+.modal .field { margin-bottom:12px; }
+.modal-footer { display:flex;gap:10px;justify-content:flex-end;margin-top:20px; }
+
+/* ─── Toast ─── */
+.toast {
+  position:fixed;bottom:24px;right:24px;z-index:200;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:14px 18px;box-shadow:var(--sh-md);
+  display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;
+  transform:translateY(80px);opacity:0;transition:all .3s;
+  max-width:340px;
+}
+.toast.show { transform:translateY(0);opacity:1; }
+.toast.success { border-left:4px solid var(--green); }
+.toast.error { border-left:4px solid var(--red); }
+.toast-icon { font-size:20px; }
+
+/* ─── Spinner ─── */
+.spinner {
+  width:20px;height:20px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;
+  border-radius:50%;animation:spin .7s linear infinite;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+
+/* ─── Alert Banner ─── */
+.alert {
+  padding:10px 14px;border-radius:var(--r-sm);font-size:13px;
+  display:flex;align-items:flex-start;gap:8px;margin-top:8px;
+}
+.alert-info { background:var(--blue-lt);color:var(--blue); }
+.alert-warn { background:var(--amber-lt);color:var(--amber); }
+.alert-info-icon::before { content:'ℹ️';font-size:14px; }
+.alert-warn-icon::before { content:'⚠️';font-size:14px; }
+
+/* ─── Responsive ─── */
+@media (max-width:640px) {
+  .header-inner { padding:10px 14px; }
+  main { padding:16px 12px 50px; }
+  .charts-grid { grid-template-columns:1fr; }
+  .nav-tabs .nav-tab { padding:6px 10px;font-size:12px; }
+  .site-title h1 { font-size:13px; }
+  .drug-grid { grid-template-columns:1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo-mark">Rx</div>
+    <div class="site-title">
+      <h1>ระบบประเมินการใช้ยา DUE</h1>
+      <p>โรงพยาบาลธวัชบุรี จ.ร้อยเอ็ด</p>
+    </div>
+    <nav class="nav-tabs">
+      <button class="nav-tab active" onclick="switchTab(event,'form')">📋 แบบฟอร์ม</button>
+      <button class="nav-tab" onclick="switchTab(event,'dashboard')">📊 Dashboard</button>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-btn" title="ตั้งค่า" onclick="openSettings()">⚙️</button>
+      <button class="icon-btn" title="สลับธีม" onclick="toggleTheme()">🌓</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- ════ FORM TAB ════ -->
+  <section id="tab-form" class="tab-content active">
+
+    <!-- Drug Selection -->
+    <div id="drug-select-section">
+      <p class="section-label">เลือกรายการยาที่ต้องการประเมิน</p>
+      <div class="drug-grid">
+        <div class="drug-card" onclick="selectDrug('ciprofloxacin')">
+          <div class="drug-card-icon">💊</div>
+          <h3>Ciprofloxacin inj.</h3>
+          <span class="drug-class badge-d">บัญชี ง</span>
+          <p>200 mg/100 ml · IV infusion<br>ยาต้านจุลชีพกลุ่ม Fluoroquinolone</p>
+        </div>
+        <div class="drug-card" onclick="selectDrug('amoxiclav')">
+          <div class="drug-card-icon">💉</div>
+          <h3>Amoxycillin/Clavulanic acid inj.</h3>
+          <span class="drug-class badge-c">บัญชี ค</span>
+          <p>1.2 g/vial · IV infusion<br>ยาต้านจุลชีพกลุ่ม Beta-lactam</p>
+        </div>
+        <div class="drug-card" onclick="selectDrug('levofloxacin')">
+          <div class="drug-card-icon">🧪</div>
+          <h3>Levofloxacin inj.</h3>
+          <span class="drug-class badge-d">บัญชี ง</span>
+          <p>750 mg/vial · IV infusion<br>ยาต้านจุลชีพกลุ่ม Fluoroquinolone</p>
+        </div>
+        <div class="drug-card" onclick="selectDrug('clarithromycin')">
+          <div class="drug-card-icon">🔬</div>
+          <h3>Clarithromycin tab.</h3>
+          <span class="drug-class badge-d">บัญชี ง</span>
+          <p>500 mg · รับประทาน<br>ยาต้านจุลชีพกลุ่ม Macrolide</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Container -->
+    <div id="form-container">
+      <div class="form-drug-header">
+        <div>
+          <h2 id="form-drug-name"></h2>
+          <div class="sub" id="form-drug-sub"></div>
+        </div>
+        <button class="btn-change" onclick="changeDrug()">← เปลี่ยนยา</button>
+      </div>
+
+      <div class="form-body">
+        <!-- Patient Info -->
+        <div class="form-section">
+          <div class="section-title">ข้อมูลผู้ป่วย</div>
+          <div class="field-grid">
+            <div class="field">
+              <label class="req">วันที่สั่งยา (Day 1)</label>
+              <input type="date" id="f-date" required>
+            </div>
+            <div class="field">
+              <label class="req">HN</label>
+              <input type="text" id="f-hn" placeholder="เลขประจำตัวผู้ป่วย" required>
+            </div>
+            <div class="field">
+              <label class="req">ชื่อ-นามสกุลผู้ป่วย</label>
+              <input type="text" id="f-name" placeholder="ชื่อ-สกุล" required>
+            </div>
+            <div class="field">
+              <label class="req">อายุ (ปี)</label>
+              <input type="number" id="f-age" min="1" max="120" placeholder="ปี" required onchange="calcCrCl()">
+            </div>
+            <div class="field">
+              <label class="req">เพศ</label>
+              <select id="f-sex" required onchange="calcCrCl()">
+                <option value="">เลือกเพศ</option>
+                <option value="male">ชาย</option>
+                <option value="female">หญิง</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Ward / หอผู้ป่วย</label>
+              <input type="text" id="f-ward" placeholder="เช่น Ward 4, ICU">
+            </div>
+            <div class="field">
+              <label>สิทธิ์การรักษา</label>
+              <select id="f-coverage">
+                <option value="">เลือกสิทธิ์</option>
+                <option>ประกันสังคม</option>
+                <option>บัตรทอง (UC)</option>
+                <option>ข้าราชการ</option>
+                <option>ชำระเงินเอง</option>
+                <option>อื่น ๆ</option>
+              </select>
+            </div>
+            <div class="field">
+              <label class="req">แพทย์ผู้สั่งใช้ยา</label>
+              <input type="text" id="f-doctor" placeholder="ชื่อแพทย์" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 1: Lab Values -->
+        <div class="form-section">
+          <div class="section-title">ส่วนที่ 1 — ค่าทางห้องปฏิบัติการ &amp; ข้อมูลการติดเชื้อ</div>
+          <div class="field-grid field-grid-3" style="margin-bottom:14px;">
+            <div class="field">
+              <label>น้ำหนักตัว (BW)</label>
+              <input type="number" id="f-bw" placeholder="kg" step="0.1" onchange="calcCrCl()">
+            </div>
+            <div class="field">
+              <label>Serum Creatinine (SCr)</label>
+              <input type="number" id="f-scr" placeholder="mg%" step="0.01" onchange="calcCrCl()">
+            </div>
+            <div class="field">
+              <label>CrCL (Cockcroft-Gault)</label>
+              <div class="crcl-box">
+                <div>
+                  <span class="crcl-val" id="crcl-display">—</span>
+                  <span style="font-size:12px;color:var(--text-muted)"> ml/min</span>
+                </div>
+                <div>
+                  <div class="crcl-label" id="crcl-label">กรอก BW, SCr, อายุ และเพศ</div>
+                  <div class="crcl-warn" id="crcl-warn"></div>
+                </div>
+              </div>
+              <input type="hidden" id="f-crcl">
+            </div>
+          </div>
+          <div class="field" style="margin-bottom:14px;">
+            <label>ยาปฏิชีวนะที่เคยได้รับมาก่อน หรือภายใน 3 เดือน</label>
+            <textarea id="f-prev-atb" placeholder="ระบุชื่อยา, วิธีใช้ หรือ N/A ถ้าไม่เคยได้รับ"></textarea>
+          </div>
+          <div class="field" style="margin-bottom:14px;">
+            <label>Site of Infection</label>
+            <div class="check-group" id="site-group">
+              <label class="check-item"><input type="checkbox" value="HEENT"> HEENT</label>
+              <label class="check-item"><input type="checkbox" value="LRTI"> LRTI</label>
+              <label class="check-item"><input type="checkbox" value="UTI"> UTI</label>
+              <label class="check-item"><input type="checkbox" value="Bone/Joint"> Bone/Joint</label>
+              <label class="check-item"><input type="checkbox" value="Skin/Soft tissue"> Skin/Soft tissue</label>
+              <label class="check-item"><input type="checkbox" value="CNS"> CNS</label>
+              <label class="check-item"><input type="checkbox" value="Intra-abdomen"> Intra-abdomen</label>
+              <label class="check-item"><input type="checkbox" value="Surgical site"> Surgical site</label>
+              <label class="check-item"><input type="checkbox" value="Bacteremia"> Bacteremia</label>
+              <label class="check-item"><input type="checkbox" value="Other" id="site-other-chk"> อื่น ๆ</label>
+            </div>
+            <input type="text" id="f-site-other" placeholder="ระบุตำแหน่งการติดเชื้ออื่น ๆ" style="margin-top:8px;display:none;">
+          </div>
+          <div class="field" style="margin-bottom:14px;">
+            <label>แหล่งติดเชื้อ</label>
+            <div class="radio-group">
+              <label class="radio-item"><input type="radio" name="infection-src" value="ภายในโรงพยาบาล"> ภายในโรงพยาบาล (HAI)</label>
+              <label class="radio-item"><input type="radio" name="infection-src" value="ภายนอกโรงพยาบาล"> ภายนอกโรงพยาบาล (CAI)</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>การส่งตรวจทางห้องปฏิบัติการ</label>
+            <div class="check-group">
+              <label class="check-item"><input type="checkbox" value="G/S" name="lab"> G/S</label>
+              <label class="check-item"><input type="checkbox" value="U/C" name="lab"> U/C</label>
+              <label class="check-item"><input type="checkbox" value="H/C" name="lab"> H/C</label>
+              <label class="check-item"><input type="checkbox" value="Sputum C/S" name="lab"> Sputum C/S</label>
+              <label class="check-item"><input type="checkbox" value="Pus C/S" name="lab"> Pus C/S</label>
+              <label class="check-item"><input type="checkbox" value="Other" id="lab-other-chk" name="lab"> อื่น ๆ</label>
+            </div>
+            <input type="text" id="f-lab-other" placeholder="ระบุการตรวจอื่น ๆ" style="margin-top:8px;display:none;">
+          </div>
+        </div>
+
+        <!-- Section 2: Indication (dynamic) -->
+        <div class="form-section" id="section2">
+          <div class="section-title">ส่วนที่ 2 — เหตุผลในการเลือกใช้ยา</div>
+          <div id="s2-content"></div>
+        </div>
+
+        <!-- Section 3: Dose -->
+        <div class="form-section" id="section3">
+          <div class="section-title">ส่วนที่ 3 — พิจารณาขนาดยา</div>
+          <div class="dose-table" id="dose-table"></div>
+          <div class="field-grid" style="margin-top:12px;">
+            <div class="field">
+              <label class="req">ขนาดยาที่สั่งใช้</label>
+              <input type="text" id="f-dose" placeholder="เช่น 200 mg IV q 8 hr" required oninput="checkDoseApprop()">
+            </div>
+            <div class="field">
+              <label>ความเหมาะสมของขนาดยา</label>
+              <div class="radio-group" style="margin-top:4px;">
+                <label class="radio-item"><input type="radio" name="dose-approp" value="เหมาะสม"> ✅ เหมาะสม</label>
+                <label class="radio-item"><input type="radio" name="dose-approp" value="ไม่เหมาะสม"> ❌ ไม่เหมาะสม</label>
+              </div>
+              <div id="dose-approp-hint" style="margin-top:6px;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 4: Day Assessment -->
+        <div class="form-section" id="section4">
+          <div class="section-title">ส่วนที่ 4 — ประเมินการสั่งใช้ยาตามวัน</div>
+          <div class="alert alert-info" style="margin-bottom:14px;">
+            <span class="alert-info-icon"></span>
+            <div><strong>Empirical tx</strong> ประเมิน Day 1, 3, 7 &nbsp;|&nbsp; <strong>Specific tx</strong> ประเมิน Day 1 และ Day 7</div>
+          </div>
+
+          <!-- Day tabs -->
+          <div class="day-tabs">
+            <button class="day-tab-btn active" onclick="switchDay(event,1)">Day 1</button>
+            <button class="day-tab-btn" id="day3-btn" onclick="switchDay(event,3)">Day 3</button>
+            <button class="day-tab-btn" onclick="switchDay(event,7)">Day 7</button>
+          </div>
+
+          <!-- Day 1 -->
+          <div class="day-panel active" id="day1-panel">
+            <div class="field-grid">
+              <div class="field">
+                <label>ความเห็นแพทย์ผู้อนุมัติใช้ยา</label>
+                <div class="radio-group">
+                  <label class="radio-item"><input type="radio" name="d1-opinion" value="เห็นควร"> เห็นควร</label>
+                  <label class="radio-item"><input type="radio" name="d1-opinion" value="ไม่เห็นควร"> ไม่เห็นควร</label>
+                </div>
+              </div>
+              <div class="field">
+                <label>วันที่ Day 1</label>
+                <input type="date" id="f-d1-date">
+              </div>
+            </div>
+            <div class="field" style="margin-top:10px;">
+              <label>คำแนะนำ Day 1</label>
+              <textarea id="f-d1-comment" placeholder="บันทึกความเห็นและคำแนะนำ"></textarea>
+            </div>
+            <div class="field" style="margin-top:10px;">
+              <label>ชื่อแพทย์ผู้ประเมิน Day 1</label>
+              <input type="text" id="f-d1-doctor" placeholder="ชื่อแพทย์ผู้ประเมิน">
+            </div>
+          </div>
+
+          <!-- Day 3 -->
+          <div class="day-panel" id="day3-panel">
+            <div class="field-grid">
+              <div class="field">
+                <label>ผลเพาะเชื้อ Day 3</label>
+                <div class="radio-group">
+                  <label class="radio-item"><input type="radio" name="d3-culture" value="N/G" onclick="toggleCultureFields(false)"> N/G</label>
+                  <label class="radio-item"><input type="radio" name="d3-culture" value="พบเชื้อ" onclick="toggleCultureFields(true)"> พบเชื้อ</label>
+                </div>
+              </div>
+              <div class="field" id="d3-organism-field" style="display:none;">
+                <label>ชนิดเชื้อที่พบ</label>
+                <input type="text" id="f-d3-organism" placeholder="เช่น E.coli, P.aeruginosa">
+              </div>
+              <div class="field" id="d3-sensitivity-field" style="display:none;">
+                <label>Sensitivity ต่อยาที่สั่งใช้</label>
+                <div class="radio-group">
+                  <label class="radio-item"><input type="radio" name="d3-sensitivity" value="Sensitivity"> Sensitivity</label>
+                  <label class="radio-item"><input type="radio" name="d3-sensitivity" value="Resistant"> Resistant</label>
+                </div>
+              </div>
+            </div>
+            <div class="field" style="margin-top:12px;">
+              <label>แผนการรักษา Day 3</label>
+              <div class="radio-group">
+                <label class="radio-item"><input type="radio" name="d3-plan" value="Continue ATB" onclick="toggleD3Days(true)"> Continue ATB</label>
+                <label class="radio-item"><input type="radio" name="d3-plan" value="Step up" onclick="toggleD3Days(false)"> Step up ATB</label>
+                <label class="radio-item"><input type="radio" name="d3-plan" value="Step down" onclick="toggleD3Days(false)"> Step down (IV→PO)</label>
+              </div>
+            </div>
+            <div class="field-grid" style="margin-top:10px;">
+              <div class="field" id="d3-days-field" style="display:none;">
+                <label>ระยะเวลาต่อเนื่อง (วัน)</label>
+                <input type="number" id="f-d3-days" min="1" placeholder="วัน">
+              </div>
+              <div class="field">
+                <label>วันที่ Day 3</label>
+                <input type="date" id="f-d3-date">
+              </div>
+              <div class="field">
+                <label>ชื่อแพทย์ผู้ประเมิน Day 3</label>
+                <input type="text" id="f-d3-doctor" placeholder="ชื่อแพทย์">
+              </div>
+            </div>
+          </div>
+
+          <!-- Day 7 -->
+          <div class="day-panel" id="day7-panel">
+            <div class="field-grid">
+              <div class="field">
+                <label>แผนการรักษา Day 7</label>
+                <div class="radio-group">
+                  <label class="radio-item"><input type="radio" name="d7-plan" value="หยุดยาครบกำหนด"> หยุดยาครบกำหนด</label>
+                  <label class="radio-item"><input type="radio" name="d7-plan" value="ขยายระยะเวลา"> ขยายระยะเวลา</label>
+                </div>
+              </div>
+              <div class="field">
+                <label>รวมระยะเวลาการรักษา (วัน)</label>
+                <input type="number" id="f-d7-total-days" min="1" placeholder="วันรวม">
+              </div>
+            </div>
+            <div class="field" style="margin-top:12px;">
+              <label>สรุปผลการรักษา</label>
+              <div class="outcome-grid">
+                <label class="outcome-btn improve">
+                  <input type="radio" name="outcome" value="Improve"> ✅ Improve
+                </label>
+                <label class="outcome-btn not-improve">
+                  <input type="radio" name="outcome" value="Not improve"> ⚠️ Not improve
+                </label>
+                <label class="outcome-btn refer">
+                  <input type="radio" name="outcome" value="Refer"> 🔄 Refer
+                </label>
+                <label class="outcome-btn died">
+                  <input type="radio" name="outcome" value="Died"> 🔴 เสียชีวิต
+                </label>
+              </div>
+            </div>
+            <div class="field-grid" style="margin-top:10px;">
+              <div class="field">
+                <label>วันที่ Day 7</label>
+                <input type="date" id="f-d7-date">
+              </div>
+              <div class="field">
+                <label>ชื่อแพทย์ผู้ประเมิน Day 7</label>
+                <input type="text" id="f-d7-doctor" placeholder="ชื่อแพทย์">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pharmacist Section -->
+        <div class="form-section" id="section-pharm">
+          <div class="section-title">ส่วนเภสัชกร — ประเมินการใช้ยา</div>
+          <div id="pharm-content"></div>
+        </div>
+
+      </div><!-- /.form-body -->
+
+      <div class="form-footer">
+        <button class="btn-secondary" type="button" onclick="resetForm()">ล้างข้อมูล</button>
+        <button class="btn-primary" type="button" id="submit-btn" onclick="submitForm()">
+          <span id="submit-text">ส่งแบบฟอร์ม DUE</span>
+          <span id="submit-spinner" style="display:none;"><div class="spinner"></div></span>
+        </button>
+      </div>
+    </div><!-- /#form-container -->
+  </section>
+
+  <!-- ════ DASHBOARD TAB ════ -->
+  <section id="tab-dashboard" class="tab-content">
+    <div class="dash-header">
+      <h2>สรุป DUE รายไตรมาส</h2>
+      <div class="quarter-select-wrap">
+        <label>ไตรมาส:</label>
+        <select id="quarter-select" onchange="loadDashboard()">
+          <!-- populated by JS -->
+        </select>
+      </div>
+      <button class="btn-secondary" onclick="loadDashboard()">🔄 รีเฟรช</button>
+    </div>
+
+    <div id="dash-content">
+      <div class="stats-row">
+        <div class="stat-tile">
+          <div class="stat-label">ทั้งหมด</div>
+          <div class="stat-val" id="d-total">—</div>
+          <div class="stat-sub">รายการ DUE ไตรมาสนี้</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-label">Empirical</div>
+          <div class="stat-val" id="d-empirical">—</div>
+          <div class="stat-sub">รายการยังไม่รู้เชื้อ</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-label">Specific</div>
+          <div class="stat-val" id="d-specific">—</div>
+          <div class="stat-sub">รายการทราบผลเชื้อ</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-label">ใช้ยาเหมาะสม</div>
+          <div class="stat-val" id="d-approp">—</div>
+          <div class="stat-sub">% ความเหมาะสม</div>
+        </div>
+      </div>
+
+      <div class="charts-grid" style="margin-bottom:16px;">
+        <div class="chart-card">
+          <h3>จำนวน DUE จำแนกตามยา</h3>
+          <div class="chart-wrap"><canvas id="chart-drug"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>ประเภทการรักษา (Empirical vs Specific)</h3>
+          <div class="chart-wrap"><canvas id="chart-txtype"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>Site of Infection</h3>
+          <div class="chart-wrap"><canvas id="chart-site"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>ผลการรักษา (Outcome)</h3>
+          <div class="chart-wrap"><canvas id="chart-outcome"></canvas></div>
+        </div>
+      </div>
+
+      <div class="chart-card" style="margin-bottom:16px;">
+        <h3>แนวโน้มจำนวน DUE รายไตรมาส</h3>
+        <div class="chart-wrap" style="height:200px;"><canvas id="chart-trend"></canvas></div>
+      </div>
+
+      <div class="chart-card">
+        <h3>รายการล่าสุด</h3>
+        <div id="dash-table-wrap" class="data-table-wrap">
+          <div class="dash-loading">⏳ กำลังโหลดข้อมูล...</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ═══ Settings Modal ═══ -->
+<div class="modal-overlay" id="settings-modal">
+  <div class="modal">
+    <h3>⚙️ ตั้งค่าระบบ</h3>
+    <p>กรอก URL ของ Google Apps Script ที่ Deploy แล้ว เพื่อให้ระบบส่งข้อมูลไป Google Sheet ได้</p>
+    <div class="field">
+      <label>Google Apps Script URL</label>
+      <input type="url" id="script-url-input" placeholder="https://script.google.com/macros/s/.../exec">
+    </div>
+    <div class="alert alert-warn" style="margin-top:8px;">
+      <span class="alert-warn-icon"></span>
+      <div>ดู README.md สำหรับวิธีสร้างและ Deploy Apps Script</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeSettings()">ยกเลิก</button>
+      <button class="btn-primary" onclick="saveSettings()">💾 บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Toast ═══ -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toast-icon"></span>
+  <span id="toast-msg"></span>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// DRUG DATA
+// ═══════════════════════════════════════════════════════════════
+const DRUGS = {
+  ciprofloxacin: {
+    name: 'Ciprofloxacin 200 mg/100 ml',
+    sub: 'บัญชี ง · IV Infusion · ยากลุ่ม Fluoroquinolone',
+    renalDosing: [
+      { range: 'CrCl > 50', dose: '200–400 mg IV q 8–12 hr' },
+      { range: 'CrCl 10–50', dose: '200–400 mg IV q 18 hr' },
+      { range: 'CrCl < 10', dose: '200–400 mg IV q 24 hr' }
+    ],
+    crclBreaks: [10, 50],
+    s2: {
+      specific: [
+        'มีผลเพาะเชื้อ <em>P. aeruginosa</em> ที่ไวต่อยานี้',
+        'มีผลเชื้อ gram-negative bacilli (ยกเว้น P. aeruginosa) ที่ไวต่อยานี้ และดื้อต่อ 3rd cephalosporin หรือแพ้ยากลุ่ม β-lactam และไม่สามารถใช้ยากลุ่ม aminoglycoside ได้',
+        'อื่น ๆ (ระบุ)'
+      ],
+      empirical: [
+        'สงสัยติดเชื้อ gram-negative bacilli ในผู้ป่วยที่แพ้ยากลุ่ม β-lactam และไม่สามารถใช้ยากลุ่ม aminoglycoside',
+        'สงสัยติดเชื้อ <em>P. aeruginosa</em>',
+        'อื่น ๆ (ระบุ)'
+      ]
+    },
+    pharmLabel: 'เภสัชกรผู้จ่ายยา'
+  },
+  amoxiclav: {
+    name: 'Amoxycillin/Clavulanic acid inj. 1.2 g',
+    sub: 'บัญชี ค · IV Infusion · ยากลุ่ม Beta-lactam + Beta-lactamase inhibitor',
+    renalDosing: [
+      { range: 'CrCl > 30', dose: '1.2 g IV q 8 hr' },
+      { range: 'CrCl 10–30', dose: '1.2 g IV loading → 600 mg IV q 12 hr' },
+      { range: 'CrCl < 10', dose: '1.2 g IV loading → 600 mg IV q 24 hr' }
+    ],
+    crclBreaks: [10, 30],
+    s2: {
+      specific: [
+        'สำหรับรักษาโรคติดเชื้อแบคทีเรียแกรมลบที่ผลิต beta-lactamase',
+        'สำหรับโรคติดเชื้อผสมระหว่างแบคทีเรียชนิด aerobe และ anaerobe',
+        'อื่น ๆ (ระบุ)'
+      ],
+      empirical: [
+        'สงสัยว่ามีการติดเชื้อแบคทีเรียแกรมลบที่ผลิต beta-lactamase',
+        'สำหรับโรคติดเชื้อผสมระหว่างแบคทีเรียชนิด aerobe และ anaerobe',
+        'อื่น ๆ (ระบุ)'
+      ]
+    },
+    pharmLabel: 'เภสัชกรผู้จ่ายยา'
+  },
+  levofloxacin: {
+    name: 'Levofloxacin inj. 750 mg',
+    sub: 'บัญชี ง · IV Infusion · ยากลุ่ม Fluoroquinolone',
+    renalDosing: [
+      { range: 'CrCl > 50', dose: '750 mg IV q 24 hr' },
+      { range: 'CrCl 20–50', dose: '750 mg IV loading → 750 mg IV q 48 hr' },
+      { range: 'CrCl < 20', dose: '750 mg IV loading → 500 mg IV q 48 hr' }
+    ],
+    crclBreaks: [20, 50],
+    s2: {
+      specific: [
+        'มีผลเพาะเชื้อพบ gram-negative bacilli ที่ดื้อยา (ESBL, MDR, XDR, PDR)',
+        'มีผล C/S พบ <em>E. coli</em> (ESBL) หรือ <em>K. pneumoniae</em> (ESBL)',
+        'อื่น ๆ (ระบุ)'
+      ],
+      empirical: [
+        'CAP ที่สงสัย DRSP หรือ atypical pathogen (<em>Mycoplasma</em>, <em>Chlamydia</em>, <em>Legionella</em>)',
+        'การติดเชื้อที่คาดว่าเกิดจาก gram-positive และ/หรือ gram-negative (pneumococcus, Enterococcus, Klebsiella, Proteus, P. aeruginosa)',
+        'อื่น ๆ (ระบุ)'
+      ]
+    },
+    pharmLabel: 'เภสัชกรผู้จ่ายยา'
+  },
+  clarithromycin: {
+    name: 'Clarithromycin 500 mg (Tablet)',
+    sub: 'บัญชี ง · รับประทาน · ยากลุ่ม Macrolide',
+    renalDosing: [
+      { range: 'CrCl > 30', dose: '250–500 mg PO bid' },
+      { range: 'CrCl < 30', dose: 'ลดขนาดยาลง 50%' }
+    ],
+    crclBreaks: [30],
+    s2: {
+      specific: [
+        '1. ใช้สำหรับการติดเชื้อของ community-acquired pneumonia (CAP)',
+        '2. ใช้ในข้อบ่งใช้พิเศษสำหรับโรคติดเชื้อ non-tuberculous <em>Mycobacterium</em> spp. (atypical mycobacterium)',
+        '3. อื่น ๆ (ระบุ)'
+      ],
+      empirical: []
+    },
+    pharmLabel: 'เภสัชกรผู้จ่ายยา',
+    outpatient: true
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════
+let selectedDrug = null;
+let charts = {};
+
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  // Set today's date
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('f-date').value = today;
+  document.getElementById('f-d1-date').value = today;
+
+  // Setup site-other toggle
+  document.getElementById('site-other-chk').addEventListener('change', e => {
+    document.getElementById('f-site-other').style.display = e.target.checked ? 'block' : 'none';
+  });
+  document.getElementById('lab-other-chk').addEventListener('change', e => {
+    document.getElementById('f-lab-other').style.display = e.target.checked ? 'block' : 'none';
+  });
+
+  // Restore settings
+  const saved = localStorage.getItem('due_script_url');
+  if (saved) document.getElementById('script-url-input').value = saved;
+
+  // Theme
+  const savedTheme = localStorage.getItem('due_theme');
+  if (savedTheme) document.documentElement.dataset.theme = savedTheme;
+
+  // Populate quarters for dashboard
+  populateQuarters();
+  loadDashboard();
+});
+
+// ═══════════════════════════════════════════════════════════════
+// TAB SWITCHING
+// ═══════════════════════════════════════════════════════════════
+function switchTab(e, tab) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  e.currentTarget.classList.add('active');
+  if (tab === 'dashboard') loadDashboard();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// DRUG SELECTION
+// ═══════════════════════════════════════════════════════════════
+function selectDrug(drugKey) {
+  selectedDrug = drugKey;
+  const drug = DRUGS[drugKey];
+
+  // Update header
+  document.getElementById('form-drug-name').textContent = drug.name;
+  document.getElementById('form-drug-sub').textContent = drug.sub;
+
+  // Render Section 2
+  renderSection2(drugKey);
+
+  // Render Dose table
+  renderDoseTable(drugKey);
+
+  // Render Pharmacist section
+  renderPharmSection(drugKey);
+
+  // Show/hide Day 3 for Day tabs (default: show)
+  document.getElementById('day3-btn').style.display = 'inline-flex';
+
+  // Scroll to form
+  document.getElementById('drug-select-section').style.display = 'none';
+  document.getElementById('form-container').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function changeDrug() {
+  selectedDrug = null;
+  document.getElementById('drug-select-section').style.display = 'block';
+  document.getElementById('form-container').style.display = 'none';
+  document.querySelectorAll('.drug-card').forEach(c => c.classList.remove('selected'));
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 2 RENDER
+// ═══════════════════════════════════════════════════════════════
+let txType = 'empirical';
+
+function renderSection2(drugKey) {
+  const drug = DRUGS[drugKey];
+  const isClarithro = drugKey === 'clarithromycin';
+  let html = '';
+
+  if (!isClarithro) {
+    html += `
+    <div class="tx-tabs">
+      <button class="tx-tab active-empirical" id="tx-empirical" onclick="setTxType('empirical')">⚡ Empirical Treatment<br><small style="font-weight:400;font-size:11px;">ยังไม่รู้เชื้อสาเหตุ</small></button>
+      <button class="tx-tab" id="tx-specific" onclick="setTxType('specific')">🔬 Specific Treatment<br><small style="font-weight:400;font-size:11px;">Drug Susceptibility</small></button>
+    </div>`;
+  } else {
+    txType = 'specific';
+    document.getElementById('day3-btn').style.display = 'none';
+  }
+
+  // Specific indications
+  if (drug.s2.specific.length > 0) {
+    html += `<div class="indication-box specific" id="box-specific" style="${isClarithro ? '' : 'display:none'}">
+      <div class="ind-header">🔬 Specific Treatment — Drug Susceptibility</div>
+      <div class="indication-list">
+        ${drug.s2.specific.map((ind, i) => `
+        <label class="ind-check">
+          <input type="checkbox" name="s2-specific" value="${i}">
+          <span>${ind}</span>
+        </label>`).join('')}
+        <div class="field" id="s2-specific-other-wrap" style="display:none;margin-top:4px;">
+          <input type="text" id="s2-specific-other" placeholder="ระบุรายละเอียด">
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // Empirical indications
+  if (drug.s2.empirical.length > 0) {
+    html += `<div class="indication-box empirical" id="box-empirical" style="${isClarithro ? 'display:none' : ''}">
+      <div class="ind-header">⚡ Empirical Treatment — ยังไม่รู้เชื้อสาเหตุ</div>
+      <div class="indication-list">
+        ${drug.s2.empirical.map((ind, i) => `
+        <label class="ind-check">
+          <input type="checkbox" name="s2-empirical" value="${i}">
+          <span>${ind}</span>
+        </label>`).join('')}
+        <div class="field" id="s2-empirical-other-wrap" style="display:none;margin-top:4px;">
+          <input type="text" id="s2-empirical-other" placeholder="ระบุรายละเอียด">
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // Other text for last option
+  document.getElementById('s2-content').innerHTML = html;
+  txType = isClarithro ? 'specific' : 'empirical';
+
+  // Wire up "อื่น ๆ" checkboxes
+  document.querySelectorAll('input[name="s2-specific"]').forEach((cb, i) => {
+    if (drug.s2.specific[i] && drug.s2.specific[i].includes('อื่น ๆ')) {
+      cb.addEventListener('change', e => {
+        const wrap = document.getElementById('s2-specific-other-wrap');
+        if (wrap) wrap.style.display = e.target.checked ? 'block' : 'none';
+      });
+    }
+  });
+  document.querySelectorAll('input[name="s2-empirical"]').forEach((cb, i) => {
+    if (drug.s2.empirical[i] && drug.s2.empirical[i].includes('อื่น ๆ')) {
+      cb.addEventListener('change', e => {
+        const wrap = document.getElementById('s2-empirical-other-wrap');
+        if (wrap) wrap.style.display = e.target.checked ? 'block' : 'none';
+      });
+    }
+  });
+}
+
+function setTxType(type) {
+  txType = type;
+  const empBtn = document.getElementById('tx-empirical');
+  const specBtn = document.getElementById('tx-specific');
+  const empBox = document.getElementById('box-empirical');
+  const specBox = document.getElementById('box-specific');
+  const day3Btn = document.getElementById('day3-btn');
+
+  if (type === 'empirical') {
+    empBtn.className = 'tx-tab active-empirical';
+    specBtn.className = 'tx-tab';
+    if (empBox) empBox.style.display = '';
+    if (specBox) specBox.style.display = 'none';
+    day3Btn.style.display = 'inline-flex';
+  } else {
+    specBtn.className = 'tx-tab active-specific';
+    empBtn.className = 'tx-tab';
+    if (specBox) specBox.style.display = '';
+    if (empBox) empBox.style.display = 'none';
+    day3Btn.style.display = 'none';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// DOSE TABLE
+// ═══════════════════════════════════════════════════════════════
+function renderDoseTable(drugKey) {
+  const drug = DRUGS[drugKey];
+  const crcl = parseFloat(document.getElementById('f-crcl').value) || null;
+  let rows = drug.renalDosing.map((r, i) => {
+    let isHighlighted = false;
+    if (crcl !== null) {
+      const breaks = drug.crclBreaks;
+      if (breaks.length === 2) {
+        if (i === 0) isHighlighted = crcl > breaks[1];
+        else if (i === 1) isHighlighted = crcl >= breaks[0] && crcl <= breaks[1];
+        else isHighlighted = crcl < breaks[0];
+      } else if (breaks.length === 1) {
+        if (i === 0) isHighlighted = crcl >= breaks[0];
+        else isHighlighted = crcl < breaks[0];
+      }
+    }
+    return `<tr${isHighlighted ? ' class="highlighted"' : ''}><td>${r.range} ml/min</td><td>${r.dose}${isHighlighted ? ' <strong>← แนะนำ</strong>' : ''}</td></tr>`;
+  }).join('');
+
+  document.getElementById('dose-table').innerHTML = `
+    <table class="data-table">
+      <thead><tr><th>CrCl</th><th>ขนาดยาที่แนะนำ</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+function checkDoseApprop() {
+  if (!selectedDrug) return;
+  renderDoseTable(selectedDrug);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PHARMACIST SECTION
+// ═══════════════════════════════════════════════════════════════
+function renderPharmSection(drugKey) {
+  const drug = DRUGS[drugKey];
+  const isClarithro = drugKey === 'clarithromycin';
+
+  let html = '';
+  if (isClarithro) {
+    html = `
+    <div class="field-grid">
+      <div class="field">
+        <label>การสั่งยาเป็นไปตามเกณฑ์</label>
+        <div class="radio-group">
+          <label class="radio-item"><input type="radio" name="pharm-criteria" value="ตามเกณฑ์"> ✅ ตามเกณฑ์</label>
+          <label class="radio-item"><input type="radio" name="pharm-criteria" value="ไม่ตามเกณฑ์"> ❌ ไม่ตามเกณฑ์</label>
+        </div>
+      </div>
+      <div class="field">
+        <label>มูลค่ายารวม (บาท)</label>
+        <input type="number" id="f-drug-value" placeholder="บาท (ราคา 21 บาท/เม็ด)" min="0">
+      </div>
+    </div>
+    <div class="field" style="margin-top:10px;">
+      <label>หากไม่ตามเกณฑ์ ระบุเหตุผล</label>
+      <textarea id="f-pharm-comment" placeholder="เหตุผล (ถ้ามี)"></textarea>
+    </div>`;
+  } else {
+    html = `
+    <div class="field-grid">
+      <div class="field">
+        <label>${drug.pharmLabel} (Day 1)</label>
+        <input type="text" id="f-pharm-d1" placeholder="ชื่อเภสัชกร">
+      </div>
+      <div class="field">
+        <label>${drug.pharmLabel} (Day 3, 7)</label>
+        <input type="text" id="f-pharm-d37" placeholder="ชื่อเภสัชกร">
+      </div>
+    </div>`;
+  }
+
+  html += `
+  <div class="field" style="margin-top:12px;">
+    <label class="req">ชื่อเภสัชกรผู้บันทึก</label>
+    <input type="text" id="f-pharm-name" placeholder="ชื่อเภสัชกร" required>
+  </div>
+  <div class="field" style="margin-top:8px;">
+    <label>วันที่บันทึก</label>
+    <input type="date" id="f-pharm-date">
+  </div>`;
+
+  document.getElementById('pharm-content').innerHTML = html;
+
+  // Set today for pharm date
+  document.getElementById('f-pharm-date').value = new Date().toISOString().split('T')[0];
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CrCl CALCULATION
+// ═══════════════════════════════════════════════════════════════
+function calcCrCl() {
+  const age = parseFloat(document.getElementById('f-age').value);
+  const bw = parseFloat(document.getElementById('f-bw').value);
+  const scr = parseFloat(document.getElementById('f-scr').value);
+  const sex = document.getElementById('f-sex').value;
+
+  const display = document.getElementById('crcl-display');
+  const label = document.getElementById('crcl-label');
+  const warn = document.getElementById('crcl-warn');
+  const hidden = document.getElementById('f-crcl');
+
+  if (!age || !bw || !scr || !sex || scr <= 0) {
+    display.textContent = '—';
+    label.textContent = 'กรอก BW, SCr, อายุ และเพศ';
+    warn.textContent = '';
+    hidden.value = '';
+    return;
+  }
+
+  let crcl = ((140 - age) * bw) / (72 * scr);
+  if (sex === 'female') crcl *= 0.85;
+  crcl = Math.max(0, Math.round(crcl * 10) / 10);
+
+  display.textContent = crcl.toFixed(1);
+  hidden.value = crcl;
+
+  let warnMsg = '';
+  if (crcl < 10) warnMsg = '⚠️ Severe renal impairment — ปรับขนาดยาตามตาราง';
+  else if (crcl < 30) warnMsg = '⚠️ Moderate renal impairment — ตรวจสอบขนาดยา';
+  else if (crcl < 50) warnMsg = '⚠️ Mild renal impairment';
+  else warnMsg = '';
+
+  label.textContent = `Cockcroft-Gault${sex === 'female' ? ' (×0.85)' : ''}`;
+  warn.textContent = warnMsg;
+
+  // Refresh dose table if drug selected
+  if (selectedDrug) renderDoseTable(selectedDrug);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// DAY TABS
+// ═══════════════════════════════════════════════════════════════
+function switchDay(e, day) {
+  document.querySelectorAll('.day-tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.day-panel').forEach(p => p.classList.remove('active'));
+  e.currentTarget.classList.add('active');
+  document.getElementById(`day${day}-panel`).classList.add('active');
+}
+
+function toggleCultureFields(show) {
+  document.getElementById('d3-organism-field').style.display = show ? '' : 'none';
+  document.getElementById('d3-sensitivity-field').style.display = show ? '' : 'none';
+}
+
+function toggleD3Days(show) {
+  document.getElementById('d3-days-field').style.display = show ? '' : 'none';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// FORM SUBMISSION
+// ═══════════════════════════════════════════════════════════════
+function getCheckboxValues(name) {
+  return [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(c => c.value).join(', ');
+}
+
+function getCheckedCheckboxText(groupId) {
+  return [...document.querySelectorAll(`#${groupId} input[type="checkbox"]:checked`)].map(c => c.value).join(', ');
+}
+
+function getRadioValue(name) {
+  const r = document.querySelector(`input[name="${name}"]:checked`);
+  return r ? r.value : '';
+}
+
+async function submitForm() {
+  const scriptUrl = localStorage.getItem('due_script_url');
+  if (!scriptUrl) {
+    openSettings();
+    showToast('กรุณาตั้งค่า Script URL ก่อนส่งแบบฟอร์ม', 'error');
+    return;
+  }
+
+  // Validate required fields
+  const required = ['f-date', 'f-hn', 'f-name', 'f-age', 'f-sex', 'f-doctor', 'f-dose', 'f-pharm-name'];
+  for (const id of required) {
+    const el = document.getElementById(id);
+    if (!el || !el.value.trim()) {
+      el && el.focus();
+      showToast(`กรุณากรอกข้อมูลที่จำเป็น (${el ? el.previousElementSibling?.textContent || id : id})`, 'error');
+      return;
+    }
+  }
+
+  // Collect site of infection
+  const sites = [...document.querySelectorAll('#site-group input[type="checkbox"]:checked')].map(c => c.value);
+  const siteOther = document.getElementById('f-site-other').value;
+  if (sites.includes('Other') && siteOther) sites[sites.indexOf('Other')] = siteOther;
+
+  // Collect lab tests
+  const labs = [...document.querySelectorAll('input[name="lab"]:checked')].map(c => c.value);
+  const labOther = document.getElementById('f-lab-other').value;
+  if (labs.includes('Other') && labOther) labs[labs.indexOf('Other')] = labOther;
+
+  // Collect Section 2 indications
+  let s2Indications = [];
+  const drug = DRUGS[selectedDrug];
+  if (txType === 'specific') {
+    document.querySelectorAll('input[name="s2-specific"]:checked').forEach(cb => {
+      const idx = parseInt(cb.value);
+      let text = drug.s2.specific[idx].replace(/<[^>]*>/g, '');
+      if (text.includes('อื่น ๆ')) {
+        const other = document.getElementById('s2-specific-other')?.value;
+        if (other) text = text + ': ' + other;
+      }
+      s2Indications.push(text);
+    });
+  } else {
+    document.querySelectorAll('input[name="s2-empirical"]:checked').forEach(cb => {
+      const idx = parseInt(cb.value);
+      let text = drug.s2.empirical[idx].replace(/<[^>]*>/g, '');
+      if (text.includes('อื่น ๆ')) {
+        const other = document.getElementById('s2-empirical-other')?.value;
+        if (other) text = text + ': ' + other;
+      }
+      s2Indications.push(text);
+    });
+  }
+
+  // Determine quarter
+  const date = new Date(document.getElementById('f-date').value);
+  const year = date.getFullYear() + 543;
+  const q = Math.ceil((date.getMonth() + 1) / 3);
+  const quarter = `Q${q}/${year}`;
+
+  const payload = {
+    timestamp: new Date().toISOString(),
+    quarter,
+    drug: selectedDrug,
+    drugName: drug.name,
+    date: document.getElementById('f-date').value,
+    hn: document.getElementById('f-hn').value.trim(),
+    patientName: document.getElementById('f-name').value.trim(),
+    age: document.getElementById('f-age').value,
+    sex: document.getElementById('f-sex').value,
+    ward: document.getElementById('f-ward').value.trim(),
+    coverage: document.getElementById('f-coverage').value,
+    doctor: document.getElementById('f-doctor').value.trim(),
+    bw: document.getElementById('f-bw').value,
+    scr: document.getElementById('f-scr').value,
+    crcl: document.getElementById('f-crcl').value,
+    prevAtb: document.getElementById('f-prev-atb').value.trim(),
+    siteOfInfection: sites.join(', '),
+    infectionSource: getRadioValue('infection-src'),
+    labTests: labs.join(', '),
+    treatmentType: txType,
+    indications: s2Indications.join('; '),
+    prescribedDose: document.getElementById('f-dose').value.trim(),
+    doseAppropriate: getRadioValue('dose-approp'),
+    day1Opinion: getRadioValue('d1-opinion'),
+    day1Comment: document.getElementById('f-d1-comment').value.trim(),
+    day1Doctor: document.getElementById('f-d1-doctor').value.trim(),
+    day1Date: document.getElementById('f-d1-date').value,
+    day3Culture: getRadioValue('d3-culture'),
+    day3Organism: document.getElementById('f-d3-organism')?.value?.trim() || '',
+    day3Sensitivity: getRadioValue('d3-sensitivity'),
+    day3Plan: getRadioValue('d3-plan'),
+    day3Days: document.getElementById('f-d3-days')?.value || '',
+    day3Doctor: document.getElementById('f-d3-doctor')?.value?.trim() || '',
+    day3Date: document.getElementById('f-d3-date')?.value || '',
+    day7Plan: getRadioValue('d7-plan'),
+    day7TotalDays: document.getElementById('f-d7-total-days').value,
+    outcome: getRadioValue('outcome'),
+    day7Doctor: document.getElementById('f-d7-doctor').value.trim(),
+    day7Date: document.getElementById('f-d7-date').value,
+    pharmCriteria: getRadioValue('pharm-criteria'),
+    pharmComment: document.getElementById('f-pharm-comment')?.value?.trim() || '',
+    pharmD1: document.getElementById('f-pharm-d1')?.value?.trim() || '',
+    pharmD37: document.getElementById('f-pharm-d37')?.value?.trim() || '',
+    pharmName: document.getElementById('f-pharm-name').value.trim(),
+    pharmDate: document.getElementById('f-pharm-date').value,
+    drugValue: document.getElementById('f-drug-value')?.value || ''
+  };
+
+  // Send
+  const btn = document.getElementById('submit-btn');
+  document.getElementById('submit-text').style.display = 'none';
+  document.getElementById('submit-spinner').style.display = 'flex';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(scriptUrl, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+      headers: { 'Content-Type': 'application/json' }
+    });
+    const json = await res.json();
+    if (json.success) {
+      showToast('✅ บันทึกข้อมูล DUE สำเร็จ!', 'success');
+      resetForm();
+    } else {
+      throw new Error(json.error || 'Unknown error');
+    }
+  } catch (err) {
+    showToast('❌ เกิดข้อผิดพลาด: ' + err.message, 'error');
+  } finally {
+    document.getElementById('submit-text').style.display = '';
+    document.getElementById('submit-spinner').style.display = 'none';
+    btn.disabled = false;
+  }
+}
+
+function resetForm() {
+  changeDrug();
+  document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('f-hn').value = '';
+  document.getElementById('f-name').value = '';
+  document.getElementById('f-age').value = '';
+  document.getElementById('f-sex').value = '';
+  document.getElementById('f-ward').value = '';
+  document.getElementById('f-coverage').value = '';
+  document.getElementById('f-doctor').value = '';
+  document.getElementById('f-bw').value = '';
+  document.getElementById('f-scr').value = '';
+  document.getElementById('f-prev-atb').value = '';
+  document.getElementById('f-dose').value = '';
+  document.getElementById('f-d1-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('crcl-display').textContent = '—';
+  document.getElementById('f-crcl').value = '';
+  document.getElementById('crcl-label').textContent = 'กรอก BW, SCr, อายุ และเพศ';
+  document.getElementById('crcl-warn').textContent = '';
+  document.querySelectorAll('.check-item input, .radio-item input').forEach(el => el.checked = false);
+  document.getElementById('f-site-other').style.display = 'none';
+  document.getElementById('f-lab-other').style.display = 'none';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════════════════════
+function populateQuarters() {
+  const sel = document.getElementById('quarter-select');
+  sel.innerHTML = '';
+  const now = new Date();
+  for (let i = 0; i < 8; i++) {
+    const d = new Date(now.getFullYear(), now.getMonth() - (i * 3), 1);
+    const year = d.getFullYear() + 543;
+    const q = Math.ceil((d.getMonth() + 1) / 3);
+    const val = `Q${q}/${year}`;
+    const opt = document.createElement('option');
+    opt.value = val;
+    opt.textContent = val;
+    sel.appendChild(opt);
+  }
+}
+
+async function loadDashboard() {
+  const scriptUrl = localStorage.getItem('due_script_url');
+  const quarter = document.getElementById('quarter-select').value;
+
+  if (!scriptUrl) {
+    document.getElementById('dash-table-wrap').innerHTML = `
+      <div class="dash-empty">
+        <div class="icon">⚙️</div>
+        <div style="font-size:15px;font-weight:600;margin-bottom:6px;">ยังไม่ได้ตั้งค่า Script URL</div>
+        <div>คลิก ⚙️ ที่มุมบนขวาเพื่อใส่ URL ของ Google Apps Script</div>
+      </div>`;
+    return;
+  }
+
+  document.getElementById('dash-table-wrap').innerHTML = '<div class="dash-loading">⏳ กำลังโหลดข้อมูล...</div>';
+
+  try {
+    const res = await fetch(`${scriptUrl}?action=dashboard&quarter=${encodeURIComponent(quarter)}`);
+    const data = await res.json();
+    renderDashboard(data);
+  } catch (err) {
+    document.getElementById('dash-table-wrap').innerHTML = `<div class="dash-empty"><div class="icon">⚠️</div><div>ไม่สามารถโหลดข้อมูลได้: ${err.message}</div></div>`;
+  }
+}
+
+function renderDashboard(data) {
+  // Update stat tiles
+  document.getElementById('d-total').textContent = data.total ?? 0;
+  document.getElementById('d-empirical').textContent = data.byTxType?.empirical ?? 0;
+  document.getElementById('d-specific').textContent = data.byTxType?.specific ?? 0;
+  const approp = data.total > 0 ? Math.round((data.appropriateCount / data.total) * 100) : 0;
+  document.getElementById('d-approp').textContent = approp + '%';
+
+  const CHART_COLORS = {
+    teal: '#2BAEDC', amber: '#F59E0B', green: '#10B981',
+    red: '#EF4444', blue: '#6366F1', purple: '#8B5CF6',
+    slate: '#64748B', rose: '#F43F5E'
+  };
+
+  const isDark = document.documentElement.dataset.theme === 'dark' ||
+    (!document.documentElement.dataset.theme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
+  const textColor = isDark ? '#D6EEF7' : '#0A2533';
+  const gridColor = isDark ? 'rgba(214,238,247,0.1)' : 'rgba(10,37,51,0.07)';
+
+  const defaultFont = { family: "'Sarabun', sans-serif", size: 12 };
+
+  // Destroy existing charts
+  Object.values(charts).forEach(c => c.destroy());
+  charts = {};
+
+  // Chart 1: Drug bar
+  const drugLabels = ['Ciprofloxacin', 'Amox/Clav', 'Levofloxacin', 'Clarithromycin'];
+  const drugKeys = ['ciprofloxacin', 'amoxiclav', 'levofloxacin', 'clarithromycin'];
+  charts.drug = new Chart(document.getElementById('chart-drug'), {
+    type: 'bar',
+    data: {
+      labels: drugLabels,
+      datasets: [{
+        data: drugKeys.map(k => data.byDrug?.[k] ?? 0),
+        backgroundColor: [CHART_COLORS.teal, CHART_COLORS.amber, CHART_COLORS.green, CHART_COLORS.purple],
+        borderRadius: 6, borderSkipped: false
+      }]
+    },
+    options: chartOptions(textColor, gridColor, defaultFont, false)
+  });
+
+  // Chart 2: Tx type doughnut
+  charts.txtype = new Chart(document.getElementById('chart-txtype'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Empirical', 'Specific'],
+      datasets: [{
+        data: [data.byTxType?.empirical ?? 0, data.byTxType?.specific ?? 0],
+        backgroundColor: [CHART_COLORS.amber, CHART_COLORS.green],
+        borderWidth: 0, hoverOffset: 6
+      }]
+    },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: textColor, font: defaultFont } } }
+    }
+  });
+
+  // Chart 3: Site of infection
+  const siteData = data.bySite ?? {};
+  const siteLabels = Object.keys(siteData).sort((a, b) => siteData[b] - siteData[a]).slice(0, 8);
+  charts.site = new Chart(document.getElementById('chart-site'), {
+    type: 'bar',
+    data: {
+      labels: siteLabels.length ? siteLabels : ['(ไม่มีข้อมูล)'],
+      datasets: [{
+        data: siteLabels.length ? siteLabels.map(s => siteData[s]) : [0],
+        backgroundColor: CHART_COLORS.blue, borderRadius: 4
+      }]
+    },
+    options: { ...chartOptions(textColor, gridColor, defaultFont, true), indexAxis: 'y' }
+  });
+
+  // Chart 4: Outcome pie
+  charts.outcome = new Chart(document.getElementById('chart-outcome'), {
+    type: 'pie',
+    data: {
+      labels: ['Improve', 'Not improve', 'Refer', 'เสียชีวิต'],
+      datasets: [{
+        data: [
+          data.byOutcome?.improve ?? 0,
+          data.byOutcome?.notImprove ?? 0,
+          data.byOutcome?.refer ?? 0,
+          data.byOutcome?.died ?? 0
+        ],
+        backgroundColor: [CHART_COLORS.green, CHART_COLORS.amber, CHART_COLORS.blue, CHART_COLORS.red],
+        borderWidth: 0, hoverOffset: 6
+      }]
+    },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: textColor, font: defaultFont } } }
+    }
+  });
+
+  // Chart 5: Trend
+  const trend = data.quarterlyTrend ?? [];
+  charts.trend = new Chart(document.getElementById('chart-trend'), {
+    type: 'line',
+    data: {
+      labels: trend.map(t => t.quarter),
+      datasets: [{
+        label: 'จำนวน DUE',
+        data: trend.map(t => t.total),
+        borderColor: CHART_COLORS.teal,
+        backgroundColor: 'rgba(43,174,220,0.12)',
+        fill: true, tension: 0.35, pointRadius: 5,
+        pointBackgroundColor: CHART_COLORS.teal
+      }]
+    },
+    options: chartOptions(textColor, gridColor, defaultFont, false)
+  });
+
+  // Recent records table
+  const rows = data.recentRecords ?? [];
+  if (rows.length === 0) {
+    document.getElementById('dash-table-wrap').innerHTML = '<div class="dash-empty"><div class="icon">📋</div><div>ไม่มีข้อมูลในไตรมาสนี้</div></div>';
+  } else {
+    const tableHtml = `
+    <table class="data-table">
+      <thead><tr>
+        <th>วันที่</th><th>HN</th><th>ชื่อผู้ป่วย</th><th>ยา</th>
+        <th>ประเภท</th><th>ผลการรักษา</th><th>เหมาะสม</th>
+      </tr></thead>
+      <tbody>${rows.map(r => `<tr>
+        <td>${r.date||''}</td>
+        <td>${r.hn||''}</td>
+        <td>${r.patientName||''}</td>
+        <td style="white-space:nowrap;font-size:12px;">${DRUGS[r.drug]?.name?.split(' ')[0]||r.drug||''}</td>
+        <td><span class="pill ${r.treatmentType==='specific'?'pill-specific':'pill-empirical'}">${r.treatmentType==='specific'?'Specific':'Empirical'}</span></td>
+        <td><span class="pill ${r.outcome==='Improve'?'pill-improve':r.outcome==='Died'?'pill-died':'pill-not'}">${r.outcome||'—'}</span></td>
+        <td>${r.doseAppropriate==='เหมาะสม'?'✅':r.doseAppropriate==='ไม่เหมาะสม'?'❌':'—'}</td>
+      </tr>`).join('')}</tbody>
+    </table>`;
+    document.getElementById('dash-table-wrap').innerHTML = tableHtml;
+  }
+}
+
+function chartOptions(textColor, gridColor, font, indexAxisY) {
+  return {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { titleFont: font, bodyFont: font }
+    },
+    scales: {
+      x: { grid: { color: gridColor }, ticks: { color: textColor, font } },
+      y: { grid: { color: gridColor }, ticks: { color: textColor, font } }
+    }
+  };
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SETTINGS & THEME
+// ═══════════════════════════════════════════════════════════════
+function openSettings() {
+  const saved = localStorage.getItem('due_script_url') || '';
+  document.getElementById('script-url-input').value = saved;
+  document.getElementById('settings-modal').classList.add('open');
+}
+function closeSettings() {
+  document.getElementById('settings-modal').classList.remove('open');
+}
+function saveSettings() {
+  const url = document.getElementById('script-url-input').value.trim();
+  localStorage.setItem('due_script_url', url);
+  closeSettings();
+  showToast('✅ บันทึกการตั้งค่าแล้ว', 'success');
+}
+
+function toggleTheme() {
+  const current = document.documentElement.dataset.theme;
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = next;
+  localStorage.setItem('due_theme', next);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════════════════
+let toastTimer;
+function showToast(msg, type = 'success') {
+  const el = document.getElementById('toast');
+  const icon = document.getElementById('toast-icon');
+  document.getElementById('toast-msg').textContent = msg;
+  el.className = `toast ${type} show`;
+  icon.textContent = type === 'success' ? '✅' : '❌';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 4000);
+}
+
+// Close modal on overlay click
+document.getElementById('settings-modal').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeSettings();
+});
+</script>
+</body>
+</html>
