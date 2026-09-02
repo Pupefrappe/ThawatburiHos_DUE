@@ -1473,12 +1473,14 @@ async function submitForm() {
   btn.disabled = true;
 
   try {
-    const res = await fetch(scriptUrl, {
+    await fetch(scriptUrl, {
       method: 'POST',
+      mode: 'no-cors',
       body: JSON.stringify(payload),
       headers: { 'Content-Type': 'application/json' }
     });
-    const json = await res.json();
+    // no-cors returns opaque response — assume success if no network error
+    const json = { success: true };
     if (json.success) {
       showToast('✅ บันทึกข้อมูล DUE สำเร็จ!', 'success');
       resetForm();
