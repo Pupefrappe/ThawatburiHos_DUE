@@ -1023,6 +1023,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('f-lab-other').style.display = e.target.checked ? 'block' : 'none';
   });
 
+  // Default Script URL
+  const DEFAULT_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxfz3lzKx9wnfpwYTzUXD9HlcJknuEhipvZOKgms2FKuEU3f-pivpoUpcM6dtCzpA/exec';
+  if (!localStorage.getItem('due_script_url')) {
+    localStorage.setItem('due_script_url', DEFAULT_SCRIPT_URL);
+  }
   // Restore settings
   const saved = localStorage.getItem('due_script_url');
   if (saved) document.getElementById('script-url-input').value = saved;
