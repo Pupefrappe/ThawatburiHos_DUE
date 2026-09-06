@@ -656,10 +656,12 @@ async function submitForm() {
   const scriptUrl = localStorage.getItem('due_script_url') || SCRIPT_URL;
 
   try {
-    // ใช้ hidden form + iframe เพื่อหลีก CORS ทั้งหมด
-    await submitViaIframe(scriptUrl, payload);
+    // ส่งข้อมูลแบบ GET (เหมือน dashboard) — ผ่าน CORS แน่นอน
+    const saveUrl = `${scriptUrl}?action=save&data=${encodeURIComponent(JSON.stringify(payload))}`;
+    const res = await fetch(saveUrl);
+    const result = await res.json();
+    if (!result.success) throw new Error(result.error || 'บันทึกไม่สำเร็จ');
 
-    // iframe form submit ไม่มี response → assume success
     document.getElementById('success-detail').textContent =
       `บันทึก ${DRUG_NAMES[selectedDrug]} — ผู้ป่วย: ${patientName} | ${payload.quarter}`;
     document.getElementById('success-panel').classList.add('show');
