@@ -247,18 +247,7 @@ tr:hover td{background:var(--surface-alt)}
     <p>โรงพยาบาลธวัชบุรี (DUE Antibiotic Order Sheet)</p>
   </div>
 
-  <!-- Role selector -->
-  <div class="card">
-    <div class="card-title">👤 ผู้กรอกแบบฟอร์ม</div>
-    <div class="role-row">
-      <button class="role-btn" id="role-doctor" onclick="setRole('doctor')">
-        <span class="role-icon">🩺</span>แพทย์
-      </button>
-      <button class="role-btn" id="role-nurse" onclick="setRole('nurse')">
-        <span class="role-icon">💉</span>พยาบาล
-      </button>
-    </div>
-  </div>
+  <!-- Role: doctor only (hidden, auto-set) -->
 
   <!-- Drug selection -->
   <div class="card">
@@ -511,6 +500,9 @@ let lastPayload = null;
 // INIT
 // ═══════════════════════════════════════════════════════════════
 window.addEventListener('DOMContentLoaded', () => {
+  // Role fixed to doctor
+  selectedRole = 'doctor';
+
   // Default Script URL
   if (!localStorage.getItem('due_script_url')) {
     localStorage.setItem('due_script_url', SCRIPT_URL);
@@ -658,15 +650,10 @@ async function submitForm() {
   const scriptUrl = localStorage.getItem('due_script_url') || SCRIPT_URL;
 
   try {
-    const formData = new URLSearchParams();
-    formData.append('data', JSON.stringify(payload));
-    await fetch(scriptUrl, {
-      method: 'POST',
-      mode: 'no-cors',
-      body: formData
-    });
+    // ใช้ hidden form + iframe เพื่อหลีก CORS ทั้งหมด
+    await submitViaIframe(scriptUrl, payload);
 
-    // no-cors → opaque response → assume success
+    // iframe form submit ไม่มี response → assume success
     document.getElementById('success-detail').textContent =
       `บันทึก ${DRUG_NAMES[selectedDrug]} — ผู้ป่วย: ${patientName} | ${payload.quarter}`;
     document.getElementById('success-panel').classList.add('show');
@@ -768,6 +755,45 @@ function exportWord() {
 
 // ═══════════════════════════════════════════════════════════════
 // RESET
+// ═══════════════════════════════════════════════════════════════
+// IFRAME FORM SUBMIT (ไม่มีปัญหา CORS เลย)
+// ═══════════════════════════════════════════════════════════════
+function submitViaIframe(scriptUrl, data) {
+  return new Promise((resolve) => {
+    // สร้าง hidden iframe
+    const iframeName = 'due_iframe_' + Date.now();
+    const iframe = document.createElement('iframe');
+    iframe.name = iframeName;
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+
+    // สร้าง form ที่ target iframe
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = scriptUrl;
+    form.target = iframeName;
+
+    // ใส่ข้อมูลเป็น hidden input
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'data';
+    input.value = JSON.stringify(data);
+    form.appendChild(input);
+    document.body.appendChild(form);
+
+    // cleanup และ resolve หลังส่ง
+    const cleanup = () => {
+      try { document.body.removeChild(form); } catch(e) {}
+      try { document.body.removeChild(iframe); } catch(e) {}
+    };
+
+    iframe.onload = () => { cleanup(); resolve({ success: true }); };
+    setTimeout(() => { cleanup(); resolve({ success: true }); }, 5000);
+
+    form.submit();
+  });
+}
+
 // ═══════════════════════════════════════════════════════════════
 function resetForm() {
   selectedDrug = ''; selectedTx = ''; selectedRole = ''; selectedContinued = '';
