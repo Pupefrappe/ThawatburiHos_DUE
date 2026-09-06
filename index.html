@@ -397,6 +397,11 @@ tr:hover td{background:var(--surface-alt)}
         <input type="date" id="f-date2">
       </div>
     </div>
+
+    <div class="field">
+      <label>ชื่อเภสัชกรผู้ประเมิน</label>
+      <input type="text" id="f-pharmacist" placeholder="ชื่อ นามสกุลเภสัชกร">
+    </div>
   </div>
 
   <!-- Buttons -->
@@ -637,7 +642,8 @@ async function submitForm() {
     continuedUse: selectedContinued === 'continue' ? 'เห็นสมควรใช้ต่อ' : selectedContinued === 'stop' ? 'เห็นสมควรหยุดใช้' : '',
     continuedReason: document.getElementById('f-cont-reason').value.trim(),
     doctorName2: document.getElementById('f-doctor2').value.trim(),
-    date2: document.getElementById('f-date2').value
+    date2: document.getElementById('f-date2').value,
+    pharmacistName: document.getElementById('f-pharmacist').value.trim()
   };
 
   lastPayload = payload;
@@ -735,6 +741,7 @@ function exportWord() {
   <tr><td class="label">เหตุผล</td><td colspan="3">${p.continuedReason || '-'}</td></tr>
   <tr><td class="label">ลงชื่อแพทย์</td><td>${p.doctorName2 || '-'}</td>
       <td class="label">วันที่</td><td>${date2Str}</td></tr>
+  <tr><td class="label">ลงชื่อเภสัชกร</td><td colspan="3">${p.pharmacistName || '-'}</td></tr>
 </table>
 
 <p class="note">พิมพ์โดยระบบ DUE — โรงพยาบาลธวัชบุรี | ${new Date().toLocaleDateString('th-TH', {year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'})}</p>
